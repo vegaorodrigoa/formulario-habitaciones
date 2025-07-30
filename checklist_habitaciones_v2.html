@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checklist Habitaciones</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: #1e3a8a;
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 16px;
+        }
+
+        .form-content {
+            padding: 40px;
+        }
+
+        .habitacion-section {
+            background: #f8fafc;
+            border: 2px solid #1e3a8a;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+
+        .habitacion-section h3 {
+            color: #1e3a8a;
+            margin-bottom: 20px;
+            font-size: 20px;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        .input-group label {
+            display: block;
+            color: #374151;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        .number-input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        .number-input:focus {
+            outline: none;
+            border-color: #1e3a8a;
+        }
+
+        .item-card {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+
+        .item-title {
+            color: #1e3a8a;
+            font-weight: 600;
+            font-size: 18px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #f3f4f6;
+            padding-bottom: 10px;
+        }
+
+        .checkbox-group {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 15px;
+        }
+
+        .checkbox-option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .checkbox-option input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            accent-color: #1e3a8a;
+        }
+
+        .checkbox-option.bueno label {
+            color: #059669;
+            font-weight: 500;
+        }
+
+        .checkbox-option.malo label {
+            color: #dc2626;
+            font-weight: 500;
+        }
+
+        .comments-textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            font-size: 14px;
+            resize: vertical;
+            min-height: 80px;
+            font-family: inherit;
+            transition: border-color 0.3s;
+        }
+
+        .comments-textarea:focus {
+            outline: none;
+            border-color: #1e3a8a;
+        }
+
+        .word-counter {
+            text-align: right;
+            font-size: 12px;
+            color: #6b7280;
+            margin-top: 5px;
+        }
+
+        .word-counter.error {
+            color: #dc2626;
+        }
+
+        .submit-section {
+            background: #f8fafc;
+            padding: 30px;
+            border-top: 1px solid #e5e7eb;
+            text-align: center;
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 18px;
+            font-weight: 600;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            min-width: 200px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(30, 58, 138, 0.3);
+        }
+
+        .submit-btn:disabled {
+            background: #9ca3af;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .error-message {
+            color: #dc2626;
+            background: #fee2e2;
+            padding: 10px 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-size: 14px;
+            border-left: 4px solid #dc2626;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            
+            .form-content {
+                padding: 20px;
+            }
+            
+            .checkbox-group {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .header h1 {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📋 Checklist de Habitaciones</h1>
+            <p>Control de calidad y mantenimiento</p>
+        </div>
+
+        <div class="form-content">
+            <div class="habitacion-section">
+                <h3>Información de Habitación</h3>
+                <div class="input-group">
+                    <label for="numHabitacion">Número de Habitación *</label>
+                    <input type="number" id="numHabitacion" class="number-input" placeholder="Ej: 101" min="1" required>
+                </div>
+            </div>
+
+            <form id="checklistForm">
+                <div class="item-card">
+                    <div class="item-title">📺 TV</div>
+                    <div class="checkbox-group">
+                        <div class="checkbox-option bueno">
+                            <input type="checkbox" id="tv_bueno" name="tv_estado" value="Bueno">
+                            <label for="tv_bueno">✅ Bueno</label>
+                        </div>
+                        <div class="checkbox-option malo">
+                            <input type="checkbox" id="tv_malo" name="tv_estado" value="Malo">
+                            <label for="tv_malo">❌ Malo</label>
+                        </div>
+                    </div>
+                    <textarea class="comments-textarea" id="tv_comentarios" placeholder="Comentarios adicionales..."></textarea>
+                    <div class="word-counter" id="tv_counter">0/20 palabras</div>
+                </div>
+
+                <div class="item-card">
+                    <div class="item-title">🎮 CONTROL TV</div>
+                    <div class="checkbox-group">
+                        <div class="checkbox-option bueno">
+                            <input type="checkbox" id="control_tv_bueno" name="control_tv_estado" value="Bueno">
+                            <label for="control_tv_bueno">✅ Bueno</label>
+                        </div>
+                        <div class="checkbox-option malo">
+                            <input type="checkbox" id="control_tv_malo" name="control_tv_estado" value="Malo">
+                            <label for="control_tv_malo">❌ Malo</label>
+                        </div>
+                    </div>
+                    <textarea class="comments-textarea" id="control_tv_comentarios" placeholder="Comentarios adicionales..."></textarea>
+                    <div class="word-counter" id="control_tv_counter">0/20 palabras</div>
+                </div>
+
+                <div class="item-card">
+                    <div class="item-title">🔌 CABLES PODER Y COAXIAL</div>
+                    <div class="checkbox-group">
+                        <div class="checkbox-option bueno">
+                            <input type="checkbox" id="cables_bueno" name="cables_estado" value="Bueno">
+                            <label for="cables_bueno">✅ Bueno</label>
+                        </div>
+                        <div class="checkbox-option malo">
+                            <input type="checkbox" id="cables_malo" name="cables_estado" value="Malo">
+                            <label for="cables_malo">❌ Malo</label>
+                        </div>
+                    </div>
+                    <textarea class="comments-textarea" id="cables_comentarios" placeholder="Comentarios adicionales..."></textarea>
+                    <div class="word-counter" id="cables_counter">0/20 palabras</div>
+                </div>
+
+                <div class="item-card">
+                    <div class="item-title">❄️ CONTROL AIRE AC</div>
+                    <div class="checkbox-group">
+                        <div class="checkbox-option bueno">
+                            <input type="checkbox" id="aire_bueno" name="aire_estado" value="Bueno">
+                            <label for="aire_bueno">✅ Bueno</label>
+                        </div>
+                        <div class="checkbox-option malo">
+                            <input type="checkbox" id="aire_malo" name="aire_estado" value="Malo">
+                            <label for="aire_malo">❌ Malo</label>
+                        </div>
+                    </div>
+                    <textarea class="comments-textarea" id="aire_comentarios" placeholder="Comentarios adicionales..."></textarea>
+                    <div class="word-counter" id="aire_counter">0/20 palabras</div>
+                </div>
+
+                <div class="item-card">
+                    <div class="item-title">🛏️ FRAZADAS</div>
+                    <div class="checkbox-group">
+                        <div class="checkbox-option bueno">
+                            <input type="checkbox" id="frazadas_bueno" name="frazadas_estado" value="Bueno">
+                            <label for="frazadas_bueno">✅ Bueno</label>
+                        </div>
+                        <div class="checkbox-option malo">
+                            <input type="checkbox" id="frazadas_malo" name="frazadas_estado" value="Malo">
+                            <label for="frazadas_malo">❌ Malo</label>
+                        </div>
+                    </div>
+                    <textarea class="comments-textarea" id="frazadas_comentarios" placeholder="Comentarios adicionales..."></textarea>
+                    <div class="word-counter" id="frazadas_counter">0/20 palabras</div>
+                </div>
+
+                <div class="item-card">
+                    <div class="item-title">🚿 SALIDA DE DUCHA</div>
+                    <div class="checkbox-group">
+                        <div class="checkbox-option bueno">
+                            <input type="checkbox" id="ducha_bueno" name="ducha_estado" value="Bueno">
+                            <label for="ducha_bueno">✅ Bueno</label>
+                        </div>
+                        <div class="checkbox-option malo">
+                            <input type="checkbox" id="ducha_malo" name="ducha_estado" value="Malo">
+                            <label for="ducha_malo">❌ Malo</label>
+                        </div>
+                    </div>
+                    <textarea class="comments-textarea" id="ducha_comentarios" placeholder="Comentarios adicionales..."></textarea>
+                    <div class="word-counter" id="ducha_counter">0/20 palabras</div>
+                </div>
+
+                <div class="item-card">
+                    <div class="item-title">🛏️ BAJADA DE CAMA</div>
+                    <div class="checkbox-group">
+                        <div class="checkbox-option bueno">
+                            <input type="checkbox" id="bajada_bueno" name="bajada_estado" value="Bueno">
+                            <label for="bajada_bueno">✅ Bueno</label>
+                        </div>
+                        <div class="checkbox-option malo">
+                            <input type="checkbox" id="bajada_malo" name="bajada_estado" value="Malo">
+                            <label for="bajada_malo">❌ Malo</label>
+                        </div>
+                    </div>
+                    <textarea class="comments-textarea" id="bajada_comentarios" placeholder="Comentarios adicionales..."></textarea>
+                    <div class="word-counter" id="bajada_counter">0/20 palabras</div>
+                </div>
+            </form>
+        </div>
+
+        <div class="submit-section">
+            <button type="button" class="submit-btn" onclick="enviarWhatsApp()">
+                📱 Enviar Checklist por WhatsApp
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Validar que solo se seleccione una opción por item
+        const items = ['tv', 'control_tv', 'cables', 'aire', 'frazadas', 'ducha', 'bajada'];
+        
+        items.forEach(item => {
+            const buenoCheckbox = document.getElementById(`${item}_bueno`);
+            const maloCheckbox = document.getElementById(`${item}_malo`);
+            
+            buenoCheckbox.addEventListener('change', function() {
+                if (this.checked) {
+                    maloCheckbox.checked = false;
+                }
+            });
+            
+            maloCheckbox.addEventListener('change', function() {
+                if (this.checked) {
+                    buenoCheckbox.checked = false;
+                }
+            });
+        });
+
+        // Contador de palabras para comentarios
+        items.forEach(item => {
+            const textarea = document.getElementById(`${item}_comentarios`);
+            const counter = document.getElementById(`${item}_counter`);
+            
+            textarea.addEventListener('input', function() {
+                const words = this.value.trim().split(/\s+/).filter(word => word.length > 0);
+                const wordCount = this.value.trim() === '' ? 0 : words.length;
+                
+                counter.textContent = `${wordCount}/20 palabras`;
+                
+                if (wordCount > 20) {
+                    counter.classList.add('error');
+                    this.style.borderColor = '#dc2626';
+                } else {
+                    counter.classList.remove('error');
+                    this.style.borderColor = '#e5e7eb';
+                }
+            });
+        });
+
+        function enviarWhatsApp() {
+            const numHabitacion = document.getElementById('numHabitacion').value;
+            
+            // Validar número de habitación
+            if (!numHabitacion || isNaN(numHabitacion)) {
+                alert('⚠️ Por favor ingresa un número de habitación válido');
+                document.getElementById('numHabitacion').focus();
+                return;
+            }
+
+            // Validar comentarios (máximo 20 palabras)
+            let errorComentarios = false;
+            items.forEach(item => {
+                const textarea = document.getElementById(`${item}_comentarios`);
+                const words = textarea.value.trim().split(/\s+/).filter(word => word.length > 0);
+                const wordCount = textarea.value.trim() === '' ? 0 : words.length;
+                
+                if (wordCount > 20) {
+                    errorComentarios = true;
+                }
+            });
+
+            if (errorComentarios) {
+                alert('⚠️ Algunos comentarios exceden las 20 palabras permitidas');
+                return;
+            }
+
+            // Crear mensaje
+            let mensaje = `🏨 *CHECKLIST HABITACIÓN ${numHabitacion}*\n\n`;
+            mensaje += `📅 Fecha: ${new Date().toLocaleDateString()}\n`;
+            mensaje += `🕐 Hora: ${new Date().toLocaleTimeString()}\n\n`;
+            mensaje += `📋 *RESULTADOS DE INSPECCIÓN:*\n\n`;
+
+            const itemNames = {
+                'tv': '📺 TV',
+                'control_tv': '🎮 Control TV',
+                'cables': '🔌 Cables Poder y Coaxial',
+                'aire': '❄️ Control Aire AC',
+                'frazadas': '🛏️ Frazadas',
+                'ducha': '🚿 Salida de Ducha',
+                'bajada': '🛏️ Bajada de Cama'
+            };
+
+            items.forEach(item => {
+                const buenoChecked = document.getElementById(`${item}_bueno`).checked;
+                const maloChecked = document.getElementById(`${item}_malo`).checked;
+                const comentarios = document.getElementById(`${item}_comentarios`).value.trim();
+                
+                mensaje += `${itemNames[item]}:\n`;
+                
+                if (buenoChecked) {
+                    mensaje += `✅ Estado: BUENO\n`;
+                } else if (maloChecked) {
+                    mensaje += `❌ Estado: MALO\n`;
+                } else {
+                    mensaje += `⚠️ Estado: NO VERIFICADO\n`;
+                }
+                
+                if (comentarios) {
+                    mensaje += `💬 Comentarios: ${comentarios}\n`;
+                }
+                mensaje += `\n`;
+            });
+
+            mensaje += `\n📱 Enviado desde Checklist Digital`;
+
+            const numeroWhatsApp = "56947618281";
+            const mensajeCodificado = encodeURIComponent(mensaje);
+            const urlWhatsApp = `https://wa.me/${numeroWhatsApp}?text=${mensajeCodificado}`;
+            
+            window.open(urlWhatsApp, '_blank');
+        }
+
+        // Validar solo números en el input de habitación
+        document.getElementById('numHabitacion').addEventListener('input', function() {
+            this.value = this.value.replace(/[^0-9]/g, '');
+        });
+    </script>
+</body>
+</html>
